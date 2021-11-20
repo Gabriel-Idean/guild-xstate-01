@@ -1,0 +1,3 @@
+interface LightProps {
+  isActive: boolean;
+}
