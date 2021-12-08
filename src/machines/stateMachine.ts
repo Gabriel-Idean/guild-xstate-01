@@ -1,19 +1,17 @@
 import { createMachine } from 'xstate';
 
 export enum States {
-  lights = 'lights',
+  lights = 'light',
   green = 'green',
   yellow = 'yellow',
   red = 'red',
 
-  modes = 'modes',
+  modes = 'mode',
   modeAuto = 'auto',
   modeMan = 'manual',
 }
 
-type Context = {
-  interval: number;
-};
+type Context = {};
 
 interface Events {
   type: 'timer' | 'toggleMode';
@@ -22,9 +20,6 @@ interface Events {
 export const stateMachine = createMachine<Context, Events>(
   {
     type: 'parallel',
-    context: {
-      interval: 1000,
-    },
     states: {
       [States.lights]: {
         initial: States.green,
@@ -70,7 +65,7 @@ export const stateMachine = createMachine<Context, Events>(
         },
       },
       [States.modes]: {
-        initial: States.modeAuto,
+        initial: States.modeMan,
         states: {
           [States.modeAuto]: {},
           [States.modeMan]: {},

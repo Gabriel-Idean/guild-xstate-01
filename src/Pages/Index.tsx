@@ -15,14 +15,14 @@ export default function Index() {
   const isAuto = state.matches([States.modes, States.modeAuto]);
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex sm:py-12 px-12">
-      <div className="py-3 sm:max-w-xl sm:mr-60 flex flex-1 w-1/2 flex-col">
+    <div className="min-h-screen bg-gray-100 py-6 md:flex sm:py-8 md:px-12 flex flex-col justify-between md:justify-around md:flex-row">
+      <div className="py-3 sm:max-w-xl sm:mr-60 flex md:flex-1 md:w-1/2 flex-col">
         <button
           className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mb-4 mx-auto"
           onClick={() => send('timer')}
           type="button"
         >
-          Timer
+          <pre>send('timer')</pre>
         </button>
 
         <Switch
@@ -33,22 +33,20 @@ export default function Index() {
           value={isAuto}
         />
 
-        <div className="px-8 py-4 bg-gray-200 border-4 border-gray-400 shadow-lg sm:rounded-xl w-48 mx-auto">
+        <div className="px-4 md:px-8 py-4 bg-gray-200 border-4 border-gray-400 shadow-lg sm:rounded-xl w-22 md:w-48 mx-auto">
           <RedLight isActive={isLight(States.red)} />
           <YellowLight isActive={isLight(States.yellow)} />
           <GreenLight isActive={isLight(States.green)} />
         </div>
-        <div className="py-10 bg-gray-300 border-4 border-t-0 border-gray-400 shadow-lg h-60 mx-auto w-12" />
+        <div className="py-10 bg-gray-300 border-4 border-t-0 border-gray-400 shadow-lg h-24 md:h-52 mx-auto w-8 md:w-12" />
       </div>
-      <div className="bg-white flex-0 rounded shadow-xl w-1/4">
+      <div className="bg-white flex-0 rounded shadow-xl md:w-1/4">
         <h2 className="text-2xl mb-4 p-4 pb-0">Current machine state:</h2>
         <pre className="bg-purple-100 p-2">
           {JSON.stringify(
             {
               state: state.value,
-              context: state.context,
-              lastValue: state?.history?.value,
-              lastEvent: state.event,
+              // context: state.context,
             },
             null,
             2,
