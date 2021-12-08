@@ -1,5 +1,4 @@
 import { useMachine } from '@xstate/react';
-import Switch from '../common/Switch';
 import GreenLight from '../Lights/GreenLight';
 import RedLight from '../Lights/RedLight';
 import YellowLight from '../Lights/YellowLight';
@@ -8,11 +7,9 @@ import { stateMachine, States } from '../machines/stateMachine';
 export default function Index() {
   const [state, send] = useMachine(stateMachine);
 
-  function isLight(light: States.green | States.red | States.yellow): boolean {
-    return state.matches([States.lights, light]);
+  function isLight(light: States): boolean {
+    return state.matches(light);
   }
-
-  const isAuto = state.matches([States.modes, States.modeAuto]);
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 md:flex sm:py-8 md:px-12 flex flex-col justify-between md:justify-around md:flex-row">
@@ -24,14 +21,6 @@ export default function Index() {
         >
           <pre>send('timer')</pre>
         </button>
-
-        <Switch
-          label="Switch mode manual/auto"
-          onChange={() => {
-            send('toggleMode');
-          }}
-          value={isAuto}
-        />
 
         <div className="px-4 md:px-8 py-4 bg-gray-200 border-4 border-gray-400 shadow-lg sm:rounded-xl w-22 md:w-48 mx-auto">
           <RedLight isActive={isLight(States.red)} />
