@@ -94,12 +94,3 @@ export const stateMachine = createMachine<Context, Events>(
     },
   },
 );
-
-// invoke: {
-//   src: (context) => (cb) => {
-//     setTimeout(() => {
-//       console.log('kikou lol');
-//       cb('timer');
-//     }, context.interval);
-//   },
-// },
