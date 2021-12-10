@@ -29,7 +29,7 @@ export default function Index() {
         </div>
         <div className="py-10 bg-gray-300 border-4 border-t-0 border-gray-400 shadow-lg h-24 md:h-52 mx-auto w-8 md:w-12" />
       </div>
-      <div className="bg-white flex-0 rounded shadow-xl md:w-1/4">
+      <div className="bg-white flex-0 rounded shadow-xl md:w-1/4 mb-12 md:mb-0">
         <h2 className="text-2xl mb-4 p-4 pb-0">Current machine state:</h2>
         <pre className="bg-purple-100 p-2">
           {JSON.stringify(
