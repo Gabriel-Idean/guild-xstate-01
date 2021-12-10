@@ -1,96 +1,80 @@
 import { createMachine } from 'xstate';
 
 export enum States {
-  lights = 'light',
   green = 'green',
   yellow = 'yellow',
   red = 'red',
+  off = 'off',
 
-  modes = 'mode',
-  modeAuto = 'auto',
-  modeMan = 'manual',
+  functional = 'functional',
+  outOfOrder = 'out_of_order',
 }
 
 type Context = {};
 
 interface Events {
-  type: 'timer' | 'toggleMode';
+  type: 'timer' | 'toggleOperatingMode';
 }
 
 export const stateMachine = createMachine<Context, Events>(
   {
-    type: 'parallel',
-    states: {
-      [States.lights]: {
-        initial: States.green,
-        on: {
-          timer: {
-            target: `${States.lights}.${States.green}`,
-          },
+    initial: States.functional,
+    on: {
+      toggleOperatingMode: [
+        {
+          cond: 'isWorking',
+          target: States.outOfOrder,
         },
+        {
+          target: States.functional,
+        },
+      ],
+    },
+    states: {
+      [States.outOfOrder]: {
+        initial: States.yellow,
         states: {
-          [States.green]: {
+          [States.yellow]: {
             after: {
-              4000: {
-                cond: 'isAuto',
-                target: [States.yellow],
+              1000: {
+                target: States.off,
               },
             },
+          },
+          [States.off]: {
+            after: {
+              1000: {
+                target: States.yellow,
+              },
+            },
+          },
+        },
+      },
+      [States.functional]: {
+        initial: States.red,
+        states: {
+          [States.green]: {
             on: {
               timer: States.yellow,
             },
           },
           [States.yellow]: {
-            after: {
-              2000: {
-                cond: 'isAuto',
-                target: [States.red],
-              },
-            },
             on: {
               timer: States.red,
             },
           },
           [States.red]: {
-            after: {
-              6000: {
-                cond: 'isAuto',
-                target: [States.green],
-              },
-            },
             on: {
               timer: States.green,
             },
           },
         },
       },
-      [States.modes]: {
-        initial: States.modeMan,
-        states: {
-          [States.modeAuto]: {},
-          [States.modeMan]: {},
-        },
-        on: {
-          toggleMode: [
-            {
-              cond: 'isAuto',
-              target: `${States.modes}.${States.modeMan}`,
-            },
-            {
-              target: [
-                `${States.modes}.${States.modeAuto}`,
-                `${States.lights}.${States.red}`,
-              ],
-            },
-          ],
-        },
-      },
     },
   },
   {
     guards: {
-      isAuto: (_, __, { state }) =>
-        state.matches([States.modes, States.modeAuto]),
+      isWorking: (_, __, { state }) => state.matches(States.functional),
     },
   },
 );
